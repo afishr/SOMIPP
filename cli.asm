@@ -29,7 +29,7 @@ main:
 	je backspace
 	
 	cmp ah, 1Ch
-	je enter
+	je enter_key
 	
 	cmp si, 255 ; limit length of input to 256
 	ja main
@@ -37,12 +37,12 @@ main:
 	mov ah, 0eh 
 	int 10h
 	
-	mov msg[si], al
+	mov [msg+si], al
 	inc si
 	
 	jne main
 
-enter:
+enter_key:
 	cmp si, 0
 	je prompt
 
@@ -56,13 +56,18 @@ enter:
 	mov cx, si
 	push cs
 	pop es
-	mov bp, offset msg
+	mov bp, msg
 	mov ah, 13h
 	int 10h
 	
 	jmp prompt
 
 backspace:
+	mov ah, 03h
+	int 10h
+	cmp dl, 0
+	je backspacenl
+
 	cmp si, 0
 	je main
 
@@ -73,7 +78,7 @@ backspace:
 	dec dl
 	int 10h
   
-  mov msg[si], 0x0
+  mov dword[msg+si], 0x0
   dec si
   
 	mov ah, 0ah 
@@ -81,8 +86,16 @@ backspace:
 	mov al, ' '
 	int 10h
 	jmp main
+	
+backspacenl:
+	mov ah, 2
+	dec dh
+	mov dl, 80
+	int 10h
+	
+  jmp backspace
 
-end:
+return_program:
 	ret 
 
 msg: dw '', 0x0
