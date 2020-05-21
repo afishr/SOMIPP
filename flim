@@ -1,0 +1,16 @@
+#!/bin/bash
+if [ -z "$1" ]; then
+  echo "No argument supplied"
+  exit 1
+fi
+
+if [ -z "$2" ]; then
+	echo "Second argument not supplied. Using default settings"
+  cp $1 "$1.img"
+  FILE="$1.img"
+else
+	cp $1 $2
+	FILE=$2
+fi
+
+truncate --size 1474560 $FILE
