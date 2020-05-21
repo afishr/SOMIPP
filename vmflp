@@ -1,5 +1,0 @@
-#!/bin/bash
-
-#vbox storagectl sdfsdf --name "Floppy Controller" --add floppy --controller I82078 --portcount 1 --bootable on
-vboxmanage storageattach sdfsdf --storagectl "Floppy Controller" --device 0 --port 0 --medium $1
-vboxmanage startvm sdfsdf	
